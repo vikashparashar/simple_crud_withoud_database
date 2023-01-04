@@ -6,9 +6,7 @@ type User struct {
 	Age  int    `json:"age"`
 }
 
-// var Users = make(map[string]User)
-
-// Users ["1"] = User{ID: 1, Name: "Vikash", Age: 27}
+// Dummy Data To Perform CRUD On Local Storage
 
 var Users = []User{
 	{ID: 1, Name: "Vikash", Age: 27},

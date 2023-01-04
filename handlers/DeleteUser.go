@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -12,20 +11,34 @@ import (
 )
 
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
-	var found = true
-	var index int
-	var rest []models.User
+
+	// declearing varibales as per requirment
+	var (
+		id     string
+		err    error
+		found  = true
+		index  int
+		rest   []models.User
+		pre    []models.User
+		post   []models.User
+		UserId int
+
+		vars map[string]string
+	)
+	// set up content type header
 	w.Header().Set("Content-Type", "application/json")
+	// checking for request method
+
 	if r.Method != "DELETE" {
-		log.Println("request Method Not Allowed !")
+		log.Println("Error : Request Method Not Allowed !")
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	} else {
-		vars := mux.Vars(r)
-		id := vars["id"]
-		UserId, err := strconv.Atoi(id)
+		vars = mux.Vars(r)
+		id = vars["id"]
+		UserId, err = strconv.Atoi(id)
 
 		if err != nil {
-			log.Fatalln("failed to convert string type id into int type")
+			log.Fatalln("Error : Failed To Convert String Type Id Into Int Type")
 		}
 
 		for i, v := range models.Users {
@@ -35,17 +48,17 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		if found == false {
+		if !found {
 			w.Write([]byte("Error : No User Found With Given Id"))
-			fmt.Println("Error : No User Found")
+			log.Println("Error : No User Found")
 		} else {
-			pre := models.Users[:index]
-			post := models.Users[index+1:]
+			pre = models.Users[:index]
+			post = models.Users[index+1:]
 			rest = append(rest, pre...)
 			rest = append(rest, post...)
 			models.Users = rest
 			w.WriteHeader(http.StatusOK)
-			fmt.Println("\t\tDelete User Process Is Success  ")
+			log.Println("Success : User Deleted !")
 			json.NewEncoder(w).Encode(models.Users)
 		}
 	}

@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
+
 	"log"
 	"net/http"
 	"strconv"
@@ -12,19 +12,29 @@ import (
 )
 
 func SingleUser(w http.ResponseWriter, r *http.Request) {
+	// set up content type header
 	w.Header().Set("Content-Type", "application/json")
-	var found bool
-	var user models.User
+
+	// declearing varibales as per requirment
+	var (
+		found  bool
+		user   models.User
+		vars   map[string]string
+		id     string
+		UserId int
+		err    error
+	)
+	// checking for request method
 	if r.Method != "GET" {
-		log.Println("request Method Not Allowed !")
+		log.Println("Error : Request Method Not Allowed !")
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	} else {
-		vars := mux.Vars(r)
-		id := vars["id"]
-		UserId, err := strconv.Atoi(id)
+		vars = mux.Vars(r)
+		id = vars["id"]
+		UserId, err = strconv.Atoi(id)
 
 		if err != nil {
-			log.Fatalln("\t\tfailed to convert string type id into int type")
+			log.Fatalln("Failed Error : can not convert string type id into int type")
 		}
 		for _, v := range models.Users {
 			if v.ID == UserId {
@@ -33,11 +43,11 @@ func SingleUser(w http.ResponseWriter, r *http.Request) {
 			}
 
 		}
-		if found != true {
-			log.Println("\t\tNo User Found With Given Id")
+		if !found {
+			log.Println("Error : No User Found !")
 			w.Write([]byte("Error : No User Found With Given Id"))
 		} else {
-			fmt.Println("\t\tUser Found With Given Id")
+			log.Println("Success : User Found !")
 			json.NewEncoder(w).Encode(user)
 		}
 	}
