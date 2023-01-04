@@ -15,7 +15,7 @@ func UpdateUserOne(w http.ResponseWriter, r *http.Request) {
 	// declearing varibales as per requirment
 	var (
 		user          models.User
-		found         bool
+		found         bool = false
 		index         int
 		newUsersSlice []models.User
 		name          string
@@ -54,7 +54,7 @@ func UpdateUserOne(w http.ResponseWriter, r *http.Request) {
 				index = i
 			}
 		}
-		if !found {
+		if found == true {
 			user.ID = newId
 			user.Name = name
 			user.Age = newAge

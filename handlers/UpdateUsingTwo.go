@@ -13,14 +13,13 @@ func UpdateUserTwo(w http.ResponseWriter, r *http.Request) {
 	// 2nd trick
 	// declearing varibales as per requirment
 	var (
-		requestBodyUser models.User
-		newUserToAdd    models.User
-		found           bool
+		found           bool = false
 		index           int
-		newUsersSlice   []models.User
-		newId           int
 		err             error
 		data            []byte
+		requestBodyUser models.User
+		newUserToAdd    models.User
+		newUsersSlice   []models.User
 		a               []models.User
 		b               []models.User
 	)
@@ -45,12 +44,12 @@ func UpdateUserTwo(w http.ResponseWriter, r *http.Request) {
 		}
 
 		for i, v := range models.Users {
-			if v.ID == newId {
+			if v.ID == requestBodyUser.ID {
 				found = true
 				index = i
 			}
 		}
-		if !found {
+		if found == true {
 
 			// assigning value to a newUserToAdd variable to add into slice
 			newUserToAdd.ID = requestBodyUser.ID
